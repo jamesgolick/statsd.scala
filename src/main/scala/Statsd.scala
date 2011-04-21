@@ -1,5 +1,6 @@
 package bitlove.statsd
 
+import com.yammer.metrics.Counter
 import com.yammer.metrics.Timer
 import com.yammer.time.Duration
 
@@ -10,9 +11,22 @@ import scala.collection.JavaConversions.JConcurrentMapWrapper
 
 class Statsd {
   val timerMetrics: ConcurrentMap[String, Timer] = new JConcurrentMapWrapper(new ConcurrentHashMap())
+  val counterMetrics: ConcurrentMap[String, Counter] = new JConcurrentMapWrapper(new ConcurrentHashMap())
 
   def addTiming(name: String, timeInMilliseconds: Int): Unit = {
     val timer = timerMetrics.getOrElseUpdate(name, new Timer())
     timer += Duration.milliseconds(timeInMilliseconds)
+  }
+
+  def incrementCounter(name: String, delta: Long): Unit = {
+    withCounter(name) { counter => counter.inc(delta) }
+  }
+
+  def decrementCounter(name: String, delta: Long): Unit = {
+    withCounter(name) { counter => counter.dec(delta) }
+  }
+
+  private def withCounter(name: String)(f: Counter => Unit): Unit = {
+    f(counterMetrics.getOrElseUpdate(name, new Counter(0)))
   }
 }
