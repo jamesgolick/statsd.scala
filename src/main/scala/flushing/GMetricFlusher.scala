@@ -11,7 +11,7 @@ import ganglia.gmetric.GMetric.UDPAddressingMode
 import ganglia.gmetric.GMetricType
 import ganglia.gmetric.GMetricSlope
 
-class GMetricFlusher(host: String, port: Int, flushInterval: Int) {
+class GMetricFlusher(host: String, port: Int, flushInterval: Int) extends Flusher {
   val gm = new GMetric(host, port, UDPAddressingMode.UNICAST)
 
   def flush(name: String, counter: Counter) = {
@@ -60,6 +60,24 @@ class GMetricFlusher(host: String, port: Int, flushInterval: Int) {
                     group)
 
     gm.announce(metricName(name, "99.9%"), timer.p999.toString, GMetricType.FLOAT,
+                  "", GMetricSlope.BOTH, flushInterval, flushInterval,
+                    group)
+  }
+
+  def flush(nameString: String, meter: LoadMeter) = {
+    val nameAndGroup = getNameAndGroup(nameString)
+    val name         = nameAndGroup._1
+    val group        = nameAndGroup._2
+
+    gm.announce(metricName(name, "one"), meter.oneMinuteRate.toString, GMetricType.UINT32,
+                  "", GMetricSlope.BOTH, flushInterval, flushInterval,
+                    group)
+
+    gm.announce(metricName(name, "five"), meter.fiveMinuteRate.toString, GMetricType.UINT32,
+                  "", GMetricSlope.BOTH, flushInterval, flushInterval,
+                    group)
+
+    gm.announce(metricName(name, "fifteen"), meter.fifteenMinuteRate.toString, GMetricType.UINT32,
                   "", GMetricSlope.BOTH, flushInterval, flushInterval,
                     group)
   }
