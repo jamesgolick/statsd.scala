@@ -18,6 +18,7 @@ class StatsdProject(info: ProjectInfo) extends DefaultProject(info) {
   val netty    = "org.jboss.netty" % "netty" % "3.2.4.Final" withSources()
   val jerkson  = "com.codahale" %% "jerkson" % "0.1.5-SNAPSHOT"
   val logula   = "com.codahale" %% "logula" % "1.0.3" withSources()
+  val jmxetric = "com.specialprojectslab" % "jmxetric" % "0.0.5"
 
   override def mainClass = Some("bitlove.statsd.server.StatsdServer")   
 
