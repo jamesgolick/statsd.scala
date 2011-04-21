@@ -2,6 +2,8 @@ package bitlove.statsd.server
 
 import bitlove.statsd.Stats
 
+import com.codahale.logula.Logging
+
 import java.net.InetSocketAddress
 import java.util.concurrent.Executors
 
@@ -16,8 +18,8 @@ import org.jboss.netty.handler.codec.string.StringDecoder
 import org.jboss.netty.handler.codec.string.StringEncoder
 import org.jboss.netty.util.CharsetUtil
 
-object StatsdServer {
-  def main(args: Array[String]) = {
+class StatsdServer(stats: Stats, port: Int = 8125) extends Logging {
+  def listen = {
     val f = new NioDatagramChannelFactory(Executors.newCachedThreadPool())
 
     val b = new ConnectionlessBootstrap(f)
@@ -28,7 +30,7 @@ object StatsdServer {
         Channels.pipeline(
           new StringEncoder(CharsetUtil.ISO_8859_1),
           new StringDecoder(CharsetUtil.ISO_8859_1),
-          new StatsdServerHandler(new Stats))
+          new StatsdServerHandler(stats))
       }
     })
 
@@ -38,6 +40,7 @@ object StatsdServer {
             "receiveBufferSizePredictorFactory",
             new FixedReceiveBufferSizePredictorFactory(1024))
 
-    b.bind(new InetSocketAddress(8080))
+    log.info("Listening on port %d.", port)
+    b.bind(new InetSocketAddress(port))
   }
 }
