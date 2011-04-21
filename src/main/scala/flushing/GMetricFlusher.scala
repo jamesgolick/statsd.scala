@@ -1,7 +1,5 @@
 package bitlove.statsd.flushing
 
-import bitlove.statsd.Statsd
-
 import com.yammer.metrics.Counter
 import com.yammer.metrics.LoadMeter
 import com.yammer.metrics.Timer

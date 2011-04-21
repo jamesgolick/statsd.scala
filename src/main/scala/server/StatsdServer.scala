@@ -1,6 +1,6 @@
 package bitlove.statsd.server
 
-import bitlove.statsd.Statsd
+import bitlove.statsd.Stats
 
 import java.net.InetSocketAddress
 import java.util.concurrent.Executors
@@ -28,7 +28,7 @@ object StatsdServer {
         Channels.pipeline(
           new StringEncoder(CharsetUtil.ISO_8859_1),
           new StringDecoder(CharsetUtil.ISO_8859_1),
-          new StatsdServerHandler(new Statsd))
+          new StatsdServerHandler(new Stats))
       }
     })
 

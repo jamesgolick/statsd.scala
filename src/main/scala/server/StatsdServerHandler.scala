@@ -1,6 +1,6 @@
 package bitlove.statsd.server
 
-import bitlove.statsd.Statsd
+import bitlove.statsd.Stats
 
 import com.codahale.jerkson.Json._
 
@@ -11,7 +11,7 @@ import org.jboss.netty.channel.ExceptionEvent
 import org.jboss.netty.channel.MessageEvent
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler
 
-class StatsdServerHandler(stats: Statsd)
+class StatsdServerHandler(stats: Stats)
   extends SimpleChannelUpstreamHandler with Logging {
   override def messageReceived(ctx: ChannelHandlerContext, e: MessageEvent) = {
     val msg    = e.getMessage.asInstanceOf[String]

@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap
 import scala.collection.mutable.ConcurrentMap
 import scala.collection.JavaConversions.JConcurrentMapWrapper
 
-class Statsd {
+class Stats {
   val timerMetrics: ConcurrentMap[String, Timer] =
     new JConcurrentMapWrapper(new ConcurrentHashMap())
   val counterMetrics: ConcurrentMap[String, Counter] =
