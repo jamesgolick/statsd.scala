@@ -1,5 +1,7 @@
 package bitlove.statsd.flushing
 
+import com.codahale.logula.Logging
+
 import com.yammer.metrics.Counter
 import com.yammer.metrics.LoadMeter
 import com.yammer.metrics.Timer
@@ -9,89 +11,62 @@ import ganglia.gmetric.GMetric.UDPAddressingMode
 import ganglia.gmetric.GMetricType
 import ganglia.gmetric.GMetricSlope
 
-class GMetricFlusher(host: String, port: Int, flushInterval: Int) extends Flusher {
+class GMetricFlusher(host: String, port: Int, flushInterval: Int) extends Flusher with Logging {
   val gm = new GMetric(host, port, UDPAddressingMode.UNICAST)
 
   def flush(name: String, counter: Counter) = {
     val nameAndGroup = getNameAndGroup(name)
 
-    gm.announce(nameAndGroup._1, counter.count.toString, GMetricType.UINT32,
-                  "", GMetricSlope.POSITIVE, flushInterval, flushInterval,
-                    nameAndGroup._2)
+    announce(nameAndGroup, "count", counter.count.toString, GMetricType.UINT32, GMetricSlope.POSITIVE)
   }
 
   def flush(nameString: String, timer: Timer) = {
     val nameAndGroup = getNameAndGroup(nameString)
-    val name         = nameAndGroup._1
-    val group        = nameAndGroup._2
 
-    gm.announce(metricName(name, "count"), timer.count.toString, GMetricType.UINT32,
-                  "", GMetricSlope.POSITIVE, flushInterval, flushInterval,
-                    group)
-
-    gm.announce(metricName(name, "max"), timer.max.toString, GMetricType.FLOAT,
-                  "", GMetricSlope.BOTH, flushInterval, flushInterval,
-                    group)
-
-    gm.announce(metricName(name, "min"), timer.min.toString, GMetricType.FLOAT,
-                  "", GMetricSlope.BOTH, flushInterval, flushInterval,
-                    group)
-
-    gm.announce(metricName(name, "mean"), timer.mean.toString, GMetricType.FLOAT,
-                  "", GMetricSlope.BOTH, flushInterval, flushInterval,
-                    group)
-
-    gm.announce(metricName(name, "median"), timer.median.toString, GMetricType.FLOAT,
-                  "", GMetricSlope.BOTH, flushInterval, flushInterval,
-                    group)
-
-    gm.announce(metricName(name, "sd"), timer.standardDeviation.toString, GMetricType.FLOAT,
-                  "", GMetricSlope.BOTH, flushInterval, flushInterval,
-                    group)
-
-    gm.announce(metricName(name, "95%"), timer.p95.toString, GMetricType.FLOAT,
-                  "", GMetricSlope.BOTH, flushInterval, flushInterval,
-                    group)
-
-    gm.announce(metricName(name, "99%"), timer.p99.toString, GMetricType.FLOAT,
-                  "", GMetricSlope.BOTH, flushInterval, flushInterval,
-                    group)
-
-    gm.announce(metricName(name, "99.9%"), timer.p999.toString, GMetricType.FLOAT,
-                  "", GMetricSlope.BOTH, flushInterval, flushInterval,
-                    group)
+    announce(nameAndGroup, "count", timer.count.toString, GMetricType.UINT32, GMetricSlope.POSITIVE)
+    announce(nameAndGroup, "max", timer.max.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
+    announce(nameAndGroup, "min", timer.min.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
+    announce(nameAndGroup, "mean", timer.mean.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
+    announce(nameAndGroup, "median", timer.median.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
+    announce(nameAndGroup, "sd", timer.standardDeviation.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
+    announce(nameAndGroup, "95%", timer.p95.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
+    announce(nameAndGroup, "99%", timer.p99.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
+    announce(nameAndGroup, "99.9%", timer.p999.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
   }
 
   def flush(nameString: String, meter: LoadMeter) = {
     val nameAndGroup = getNameAndGroup(nameString)
-    val name         = nameAndGroup._1
-    val group        = nameAndGroup._2
 
-    gm.announce(metricName(name, "one"), meter.oneMinuteRate.toString, GMetricType.UINT32,
-                  "", GMetricSlope.BOTH, flushInterval, flushInterval,
-                    group)
-
-    gm.announce(metricName(name, "five"), meter.fiveMinuteRate.toString, GMetricType.UINT32,
-                  "", GMetricSlope.BOTH, flushInterval, flushInterval,
-                    group)
-
-    gm.announce(metricName(name, "fifteen"), meter.fifteenMinuteRate.toString, GMetricType.UINT32,
-                  "", GMetricSlope.BOTH, flushInterval, flushInterval,
-                    group)
+    announce(nameAndGroup, "one", meter.oneMinuteRate.toString, GMetricType.UINT32, GMetricSlope.BOTH)
+    announce(nameAndGroup, "five", meter.fiveMinuteRate.toString, GMetricType.UINT32, GMetricSlope.BOTH)
+    announce(nameAndGroup, "fifteen", meter.fifteenMinuteRate.toString, GMetricType.UINT32, GMetricSlope.BOTH)
   }
 
   private def getNameAndGroup(string: String): (String, String) = {
     val nameAndGroup = string.split('|')
     val group = nameAndGroup.length match {
       case 1 => ""
+      case 2 => nameAndGroup(0)
+    }
+    val name = nameAndGroup.length match {
+      case 1 => nameAndGroup(0)
       case 2 => nameAndGroup(1)
     }
-    val name = nameAndGroup(0)
-
+ 
     (name -> group)
   }
 
   private def metricName(name: String, suffix: String): String = {
-    List(name, suffix).mkString("-")
+    List(name, suffix).filter(_ == "").mkString("-")
+  }
+
+  private def announce(nameAndGroup: (String, String), suffix: String, value: String, gmetricType: GMetricType, gmetricSlope: GMetricSlope): Unit = {
+    val name  = metricName(nameAndGroup._1, suffix)
+    val group = nameAndGroup._2
+    log.fine("Announcing %s-%s %s %s %s.", group, name, value, gmetricType.getGangliaType, gmetricSlope)
+
+    gm.announce(name, value, gmetricType,
+                  "", gmetricSlope, flushInterval, flushInterval,
+                    group)
   }
 }
