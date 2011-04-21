@@ -11,9 +11,12 @@ import scala.collection.mutable.ConcurrentMap
 import scala.collection.JavaConversions.JConcurrentMapWrapper
 
 class Statsd {
-  val timerMetrics: ConcurrentMap[String, Timer] = new JConcurrentMapWrapper(new ConcurrentHashMap())
-  val counterMetrics: ConcurrentMap[String, Counter] = new JConcurrentMapWrapper(new ConcurrentHashMap())
-  val loadMeterMetrics: ConcurrentMap[String, LoadMeter] = new JConcurrentMapWrapper(new ConcurrentHashMap())
+  val timerMetrics: ConcurrentMap[String, Timer] =
+    new JConcurrentMapWrapper(new ConcurrentHashMap())
+  val counterMetrics: ConcurrentMap[String, Counter] =
+    new JConcurrentMapWrapper(new ConcurrentHashMap())
+  val loadMeterMetrics: ConcurrentMap[String, LoadMeter] =
+    new JConcurrentMapWrapper(new ConcurrentHashMap())
 
   def addTiming(name: String, timeInMilliseconds: Int): Unit = {
     val timer = timerMetrics.getOrElseUpdate(name, new Timer())
