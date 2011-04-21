@@ -4,14 +4,28 @@ import bitlove.statsd.server.StatsdServer
 import bitlove.statsd.flushing.GMetricFlusher
 import bitlove.statsd.flushing.Flusher
 
-class StatsdDaemon(stats: Stats, flusher: Flusher, port: Int, flushInterval: Int) {
+import com.codahale.logula.Logging
+
+class StatsdDaemon(stats:         Stats,
+                   flusher:       Flusher,
+                   port:          Int,
+                   flushInterval: Int) extends Logging {
   def apply() = {
     val flushThread = new Thread() {
       override def run = {
-        stats.counterMetrics.foreach { case (k,v) => flusher.flush(k,v) }
-        stats.timerMetrics.foreach { case (k,v) => flusher.flush(k,v) }
-        stats.loadMeterMetrics.foreach { case (k,v) => flusher.flush(k,v) }
-        Thread.sleep(flushInterval)
+        while(true) {
+          try {
+            Thread.sleep(flushInterval)
+
+            log.info("Starting flush.")
+            stats.counterMetrics.foreach { case (k,v) => flusher.flush(k,v) }
+            stats.timerMetrics.foreach { case (k,v) => flusher.flush(k,v) }
+            stats.loadMeterMetrics.foreach { case (k,v) => flusher.flush(k,v) }
+            log.info("Flush complete!")
+          } catch {
+            case t: Throwable => log.severe(t, "Exception in flush thread")
+          }
+        }
       }
     }
     flushThread.start
