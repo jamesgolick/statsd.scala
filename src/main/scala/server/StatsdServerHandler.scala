@@ -18,7 +18,7 @@ class StatsdServerHandler(stats: Statsd)
     val metric = parse[Map[String, String]](msg)
     val name   = metric("name")
 
-    log.fine(msg)
+    log.fine("Received message: %s", msg)
 
     metric("action") match {
       case "inc" => 
@@ -43,6 +43,6 @@ class StatsdServerHandler(stats: Statsd)
   }
 
   override def exceptionCaught(ctx: ChannelHandlerContext, e: ExceptionEvent) = {
-    e.getCause.printStackTrace
+    log.severe(e.getCause, "Exception in StatsdServiceHandler")
   } 
 }

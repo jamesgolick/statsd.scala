@@ -20,4 +20,6 @@ class StatsdProject(info: ProjectInfo) extends DefaultProject(info) {
   val logula   = "com.codahale" %% "logula" % "1.0.3" withSources()
 
   override def mainClass = Some("bitlove.statsd.server.StatsdServer")   
+
+  override def fork = forkRun("-Djava.util.logging.config.file=config/log.properties" :: Nil)
 }
