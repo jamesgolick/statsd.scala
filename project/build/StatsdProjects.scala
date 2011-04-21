@@ -7,7 +7,11 @@ class StatsdProject(info: ProjectInfo) extends DefaultProject(info) {
   val snapshotsRep = "Scala Tools Snapshots Repository" at
                           "http://scala-tools.org/repo-snapshots/"
 
+  val jbossRepo = "JBoss Repo" at
+                   "https://repository.jboss.org/nexus/content/repositories/releases"
+
   val metrics  = "com.yammer" %% "metrics" % "1.0.7" withSources()
   val specs    = "org.scala-tools.testing" %% "specs" % "1.6.5"
   val mockito  = "org.mockito" % "mockito-all" % "1.8.5"
+  val netty    = "org.jboss.netty" % "netty" % "3.2.4.Final" withSources()
 }
