@@ -81,7 +81,7 @@ class GMetricFlusher(host: String, port: Int, flushInterval: Int) extends Flushe
   }
 
   private def getNameAndGroup(string: String): (String, String) = {
-    val nameAndGroup = string.split("|")
+    val nameAndGroup = string.split('|')
     val group = nameAndGroup.length match {
       case 1 => ""
       case 2 => nameAndGroup(1)
