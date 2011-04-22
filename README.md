@@ -66,7 +66,7 @@ Load meters will flush, one, five, and fifteen minute weighted meters (like `top
 
 * the Coda Hale stack
   * codahale/jerkson
-  * codahale/metrics
+  * codahale/metrics (all the heavy lifting is done by metrics)
   * codahale/logula
 * netty
 * jmxetric (because who the hell wants to implement the gmetric protocol?)
