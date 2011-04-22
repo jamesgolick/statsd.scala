@@ -15,7 +15,7 @@ class StatsdProject(info: ProjectInfo) extends DefaultProject(info) with rsync.R
 
   override def mainClass = Some("bitlove.statsd.StatsdDaemon")   
 
-  override def fork = forkRun("-Djava.util.logging.config.file=config/log.properties" :: Nil)
+  override def fork = forkRun("-Dlog4j.configuration=config/log4j.properties" :: Nil)
 
   /**
    * mvn repo to publish to.
