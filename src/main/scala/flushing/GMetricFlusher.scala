@@ -11,6 +11,8 @@ import ganglia.gmetric.GMetric.UDPAddressingMode
 import ganglia.gmetric.GMetricType
 import ganglia.gmetric.GMetricSlope
 
+import java.util.concurrent.TimeUnit
+
 class GMetricFlusher(host: String, port: Int, flushInterval: Int) extends Flusher with Logging {
   val gm = new GMetric(host, port, UDPAddressingMode.UNICAST)
 
@@ -24,14 +26,14 @@ class GMetricFlusher(host: String, port: Int, flushInterval: Int) extends Flushe
     val nameAndGroup = getNameAndGroup(nameString)
 
     announce(nameAndGroup, "count", timer.count.toString, GMetricType.UINT32, GMetricSlope.POSITIVE)
-    announce(nameAndGroup, "max", timer.max.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
-    announce(nameAndGroup, "min", timer.min.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
-    announce(nameAndGroup, "mean", timer.mean.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
-    announce(nameAndGroup, "median", timer.median.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
-    announce(nameAndGroup, "sd", timer.standardDeviation.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
-    announce(nameAndGroup, "95%", timer.p95.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
-    announce(nameAndGroup, "99%", timer.p99.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
-    announce(nameAndGroup, "99.9%", timer.p999.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
+    announce(nameAndGroup, "max", timer.max.convert(TimeUnit.MILLISECONDS).value.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
+    announce(nameAndGroup, "min", timer.min.convert(TimeUnit.MILLISECONDS).value.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
+    announce(nameAndGroup, "mean", timer.mean.convert(TimeUnit.MILLISECONDS).value.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
+    announce(nameAndGroup, "median", timer.median.convert(TimeUnit.MILLISECONDS).value.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
+    announce(nameAndGroup, "sd", timer.standardDeviation.convert(TimeUnit.MILLISECONDS).value.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
+    announce(nameAndGroup, "95%", timer.p95.convert(TimeUnit.MILLISECONDS).value.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
+    announce(nameAndGroup, "99%", timer.p99.convert(TimeUnit.MILLISECONDS).value.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
+    announce(nameAndGroup, "99.9%", timer.p999.convert(TimeUnit.MILLISECONDS).value.toString, GMetricType.FLOAT, GMetricSlope.BOTH)
   }
 
   def flush(nameString: String, meter: LoadMeter) = {
