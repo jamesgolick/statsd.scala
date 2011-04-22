@@ -12,7 +12,7 @@ class StatsdProject(info: ProjectInfo) extends DefaultProject(info)
   val mockito  = "org.mockito" % "mockito-all" % "1.8.5"
   val netty    = "org.jboss.netty" % "netty" % "3.2.4.Final" withSources()
   val jerkson  = "com.codahale" %% "jerkson" % "0.1.5"
-  val logula   = "com.codahale" %% "logula" % "2.0.0" withSources()
+  val logula   = "com.codahale" %% "logula" % "2.1.1" withSources()
   val jmxetric = "com.specialprojectslab" % "jmxetric" % "0.0.5"
 
   override def mainClass = Some("bitlove.statsd.StatsdDaemon")   
