@@ -28,7 +28,7 @@ Then push json messages to it over UDP.
 
 There are currently 4 actions:
 
-= Counters
+# Counters
 
 increment messages look like this:
 
@@ -38,13 +38,15 @@ decrement messages look like this:
 
     {:action => "dec", :delta => "someIntValue", :name => "name of metric here"}
 
-= Timers
+# Timers
 
 messages look like this:
+
     {:action => "timing", :duration => "valueInMs", :name => "name of metric here"}
 
-= LoadMeters
+# LoadMeters
 
 messages look like this:
+
     {:action => "mark", :count => "someIntValue", :name => "name of metric here"}
 
