@@ -1,6 +1,8 @@
 import sbt._
 
-class StatsdProject(info: ProjectInfo) extends DefaultProject(info) with rsync.RsyncPublishing {
+class StatsdProject(info: ProjectInfo) extends DefaultProject(info)
+                                       with rsync.RsyncPublishing
+                                       with ruby.GemBuilding {
   val codaRepo = "Coda Hale's Repository" at "http://repo.codahale.com/"
   val jbossRepo = "JBoss Repo" at
                    "https://repository.jboss.org/nexus/content/repositories/releases"
@@ -22,4 +24,11 @@ class StatsdProject(info: ProjectInfo) extends DefaultProject(info) with rsync.R
    */
   def rsyncRepo = "james@jamesgolick.com:/var/www/repo.jamesgolick.com"
   override def rsyncOptions = "-rvz" :: Nil
+
+  /**
+   * Gem building stuff
+   */
+   override val gemAuthor = "James Golick"
+   override val gemAuthorEmail = "jamesgolick@gmail.com"
+   override val gemVersion = version.toString
 }
