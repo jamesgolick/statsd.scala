@@ -26,27 +26,46 @@ Then push json messages to it over UDP.
     >> socket.send({:action => "timing", :name => "MyController#action", :duration => "120"}.to_json, 0, "localhost", 8125)
     => 65
 
-There are currently 4 actions:
+There are currently 3 kinds of metrics:
 
-# Counters
+## Counters
 
-increment messages look like this:
+Increment messages look like this:
 
     {:action => "inc", :delta => "someIntValue", :name => "name of metric here"}
 
-decrement messages look like this:
+Decrement messages look like this:
 
     {:action => "dec", :delta => "someIntValue", :name => "name of metric here"}
 
-# Timers
+A counter will only flush a "count" metric to ganglia.
 
-messages look like this:
+## Timers
+
+Messages look like this:
 
     {:action => "timing", :duration => "valueInMs", :name => "name of metric here"}
 
-# LoadMeters
+Timers will flush a "count" metric to ganglia, as well as statistics about the timings (min, max, mean, median, stddev, 95%, 99% 99.9%)
 
-messages look like this:
+## LoadMeters
+
+Messages look like this:
 
     {:action => "mark", :count => "someIntValue", :name => "name of metric here"}
 
+Load meters will flush, one, five, and fifteen minute weighted meters (like `top`).
+
+
+# Dependencies
+
+* the Coda Hale stack
+  * codahale/jerkson
+  * codahale/metrics
+  * codahale/logula
+* netty
+* jmxetric (because who the hell wants to implement the gmetric protocol?)
+
+# Copyright
+
+Copyright (c) 2011 James Golick, BitLove Inc.
