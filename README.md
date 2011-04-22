@@ -3,7 +3,7 @@ statsd.scala
 
 statsd (https://github.com/etsy/statsd) without the node.js and flushing to ganglia instead of graphite.
 
-= How it works
+# How it works
 
 Create an instance of bitlove.statsd.StatsdDaemon:
     
