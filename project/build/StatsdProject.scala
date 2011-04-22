@@ -1,6 +1,6 @@
 import sbt._
 
-class StatsdProject(info: ProjectInfo) extends DefaultProject(info) {
+class StatsdProject(info: ProjectInfo) extends DefaultProject(info) with rsync.RsyncPublishing {
   val codaRepo = "Coda Hale's Repository" at "http://repo.codahale.com/"
   val jbossRepo = "JBoss Repo" at
                    "https://repository.jboss.org/nexus/content/repositories/releases"
@@ -16,4 +16,10 @@ class StatsdProject(info: ProjectInfo) extends DefaultProject(info) {
   override def mainClass = Some("bitlove.statsd.StatsdDaemon")   
 
   override def fork = forkRun("-Djava.util.logging.config.file=config/log.properties" :: Nil)
+
+  /**
+   * mvn repo to publish to.
+   */
+  def rsyncRepo = "james@jamesgolick.com:/var/www/repo.jamesgolick.com"
+  override def rsyncOptions = "-rvz" :: Nil
 }
