@@ -14,7 +14,7 @@ import ganglia.gmetric.GMetricSlope
 import java.util.concurrent.TimeUnit
 
 class GMetricFlusher(host: String, port: Int, flushInterval: Int) extends Flusher with Logging {
-  val gm = new GMetric(host, port, UDPAddressingMode.UNICAST)
+  val gm = new GMetric(host, port, UDPAddressingMode.UNICAST, true)
 
   def flush(name: String, counter: Counter) = {
     val nameAndGroup = getNameAndGroup(name)
