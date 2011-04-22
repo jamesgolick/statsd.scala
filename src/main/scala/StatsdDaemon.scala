@@ -34,7 +34,7 @@ class StatsdDaemon(stats:         Stats,
             stats.loadMeterMetrics.foreach { case (k,v) => flusher.flush(k,v) }
             log.info("Flush complete!")
           } catch {
-            case t: Throwable => log.severe(t, "Exception in flush thread")
+            case t: Throwable => log.error(t, "Exception in flush thread")
           }
         }
       }

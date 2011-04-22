@@ -65,7 +65,7 @@ class GMetricFlusher(host: String, port: Int, flushInterval: Int) extends Flushe
   private def announce(nameAndGroup: (String, String), suffix: String, value: String, gmetricType: GMetricType, gmetricSlope: GMetricSlope, unit: String = ""): Unit = {
     val name  = metricName(nameAndGroup._1, suffix)
     val group = nameAndGroup._2
-    log.fine("Announcing %s-%s %s%s %s %s.", group, name, value, unit, gmetricType.getGangliaType, gmetricSlope)
+    log.trace("Announcing %s-%s %s%s %s %s.", group, name, value, unit, gmetricType.getGangliaType, gmetricSlope)
 
     gm.announce(name, value, gmetricType,
                   unit, gmetricSlope, flushInterval, flushInterval,

@@ -18,31 +18,31 @@ class StatsdServerHandler(stats: Stats)
     val metric = parse[Map[String, String]](msg)
     val name   = metric("name")
 
-    log.fine("Received message: %s", msg)
+    log.trace("Received message: %s", msg)
 
     metric("action") match {
       case "inc" => 
         val delta = metric("delta").toLong
-        log.fine("Increment counter %s with %d.", name, delta)
+        log.trace("Increment counter %s with %d.", name, delta)
         stats.incrementCounter(name, delta)
       case "dec" =>
         val delta = metric("delta").toLong
-        log.fine("Decrement counter %s with %d.", name, delta)
+        log.trace("Decrement counter %s with %d.", name, delta)
         stats.decrementCounter(name, delta)
       case "timing" =>
         val duration = metric("duration").toInt
-        log.fine("Add timing for %s with %d.", name, duration)
+        log.trace("Add timing for %s with %d.", name, duration)
         stats.addTiming(name, duration)
       case "mark" =>
         val count = metric("count").toInt
-        log.fine("Mark load meter %s with %d", name, count)
+        log.trace("Mark load meter %s with %d", name, count)
         stats.markLoadMeter(name, count)
       case x: String => 
-        log.severe("Unknown action: %s", x)
+        log.error("Unknown action: %s", x)
     }
   }
 
   override def exceptionCaught(ctx: ChannelHandlerContext, e: ExceptionEvent) = {
-    log.severe(e.getCause, "Exception in StatsdServiceHandler")
+    log.error(e.getCause, "Exception in StatsdServiceHandler")
   } 
 }
