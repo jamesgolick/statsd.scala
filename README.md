@@ -40,7 +40,7 @@ Decrement messages look like this:
 
 A counter will only flush a "count" metric to ganglia.
 
-## Timers
+### Timers
 
 Messages look like this:
 
@@ -48,7 +48,7 @@ Messages look like this:
 
 Timers will flush a "count" metric to ganglia, as well as statistics about the timings (min, max, mean, median, stddev, 95%, 99% 99.9%)
 
-## LoadMeters
+### LoadMeters
 
 Messages look like this:
 
