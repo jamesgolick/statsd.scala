@@ -1,7 +1,7 @@
 statsd.scala
 ============
 
-statsd (https://github.com/etsy/statsd) without the node.js and flushing to ganglia instead of graphite.
+statsd (https://github.com/etsy/statsd) without the node.js and flushing to ganglia instead of graphite (actually, flushing is pluggable).
 
 # How it works
 
