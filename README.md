@@ -5,6 +5,11 @@ statsd (https://github.com/etsy/statsd) without the node.js and flushing to gang
 
 # How it works
 
+Depend on it:
+    
+    val jgRepo = "James Golick's Repo" at "http://repo.jamesgolick.com/"
+    val statsd  = "com.bitlove" %% "statsd" % "0.0.1"
+
 Create an instance of bitlove.statsd.StatsdDaemon:
     
     val daemon = new bitlove.statsd.StatsdDaemon(gangliaHost   = "localhost",
