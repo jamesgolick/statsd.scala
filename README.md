@@ -28,7 +28,7 @@ Then push json messages to it over UDP.
 
 There are currently 3 kinds of metrics:
 
-## Counters
+### Counters
 
 Increment messages look like this:
 
