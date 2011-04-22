@@ -10,6 +10,17 @@ class StatsdDaemon(stats:         Stats,
                    flusher:       Flusher,
                    port:          Int,
                    flushInterval: Int) extends Logging {
+
+  def this(gangliaHost: String,
+           gangliaPort: Int,
+           listenPort: Int,
+           flushInterval: Int) = {
+    this(new Stats,
+         new GMetricFlusher(gangliaHost, gangliaPort, flushInterval),
+         listenPort,
+         flushInterval)
+  }
+
   def apply() = {
     val flushThread = new Thread() {
       override def run = {
