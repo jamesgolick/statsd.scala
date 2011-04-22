@@ -31,4 +31,5 @@ class StatsdProject(info: ProjectInfo) extends DefaultProject(info)
    override val gemAuthor = "James Golick"
    override val gemAuthorEmail = "jamesgolick@gmail.com"
    override val gemVersion = version.toString
+   override val gemDependencies = Map("rufus-json" -> "0.2.5")
 }
