@@ -57,7 +57,7 @@ class GMetricFlusher(host: String, port: Int, flushInterval: Int) extends Flushe
   }
 
   private def metricName(name: String, suffix: String): String = {
-    List(name, suffix).filter(_ == "").mkString("-")
+    List(name, suffix).filter(_ != "").mkString("-")
   }
 
   private def announce(nameAndGroup: (String, String), suffix: String, value: String, gmetricType: GMetricType, gmetricSlope: GMetricSlope): Unit = {
