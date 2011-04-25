@@ -3,4 +3,5 @@ class Plugins(info: sbt.ProjectInfo) extends sbt.PluginDefinition(info) {
   val jamesRepo = "James Golick's Repo" at "http://repo.jamesgolick.com/"
   val sbtRsync  = "com.codahale" % "rsync-sbt" % "0.1.1"
   val sbtRuby   = "com.bitlove" % "sbt-ruby" % "1.0.7"
+  val assemblySBT = "com.codahale" % "assembly-sbt" % "0.1.1"
 }

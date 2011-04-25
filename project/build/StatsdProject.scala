@@ -2,7 +2,8 @@ import sbt._
 
 class StatsdProject(info: ProjectInfo) extends DefaultProject(info)
                                        with rsync.RsyncPublishing
-                                       with ruby.GemBuilding {
+                                       with ruby.GemBuilding
+                                       with assembly.AssemblyBuilder {
   val codaRepo = "Coda Hale's Repository" at "http://repo.codahale.com/"
   val jbossRepo = "JBoss Repo" at
                    "https://repository.jboss.org/nexus/content/repositories/releases"
