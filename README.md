@@ -20,7 +20,7 @@ Once you have a config, start the daemon:
 
     CONFIG=/path/to/statsd.conf java -jar statsd-assembly-0.0.1.jar
 
-Then push json messages to it over UDP.
+Then push json messages to it over UDP (there's also a rubygem. see below).
 
     >> require "socket"
     => true
@@ -61,6 +61,30 @@ Messages look like this:
 
 Load meters will flush, one, five, and fifteen minute weighted meters (like `top`).
 
+# RubyGem
+
+The rubygem uses a facade for JSON generation that's capable of using several different JSON backends. Make sure to require your JSON lib of choice _before_ requiring statsd.
+
+The API is pretty simple:
+
+    sudo gem install statsd.scala
+
+    ree-1.8.7-2011.03 :001 > require "rubygems"
+      => true 
+    ree-1.8.7-2011.03 :002 > require "yajl
+     => true 
+    ree-1.8.7-2011.03 :005 > require "statsd"
+     => true 
+    ree-1.8.7-2011.03 :006 > stats=Statsd.new
+     => #<Statsd:0x103a65258 @socket=#<UDPSocket:0x103a651e0>, @port=8125, @host="localhost"> 
+    ree-1.8.7-2011.03 :008 > stats.time("somemetric") { sleep(2); "return value of the block" }
+     => "return value of the block" 
+    ree-1.8.7-2011.03 :009 > stats.inc("somecounter", 10)
+     => 48 
+    ree-1.8.7-2011.03 :010 > stats.dec("somecounter", 10)
+     => 48 
+    ree-1.8.7-2011.03 :011 > stats.mark("somemeter", 10)
+     => 47 
 
 # Dependencies
 
