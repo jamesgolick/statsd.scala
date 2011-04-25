@@ -7,7 +7,7 @@ statsd (https://github.com/etsy/statsd) without the node.js and flushing to gang
 
 Download the assembly:
     
-    wget https://github.com/jamesgolick/statsd.scala/downloads/whatever.jar
+    wget https://github.com/downloads/jamesgolick/statsd.scala/statsd.scala-assembly-0.0.1.jar
 
 Grab the example config file (JSON), and modify it to your liking:
     
@@ -18,7 +18,7 @@ You'll want to make sure that ganglia.host and ganglia.port point to your gmond 
 
 Once you have a config, start the daemon:
 
-    CONFIG=/path/to/statsd.conf java -jar statsd-assembly-0.0.1.jar
+    CONFIG=/path/to/statsd.conf java -jar statsd.scala-assembly-0.0.1.jar
 
 Then push json messages to it over UDP (there's also a rubygem. see below).
 
