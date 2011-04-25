@@ -4,7 +4,10 @@ import bitlove.statsd.server.StatsdServer
 import bitlove.statsd.flushing.GMetricFlusher
 import bitlove.statsd.flushing.Flusher
 
+import com.codahale.fig.Configuration
 import com.codahale.logula.Logging
+
+import org.apache.log4j.Level
 
 class StatsdDaemon(stats:         Stats,
                    flusher:       Flusher,
@@ -48,9 +51,33 @@ class StatsdDaemon(stats:         Stats,
 
 object StatsdDaemon {
   def main(args: Array[String]): Unit = {
-    val flusher = new GMetricFlusher("localhost", 8649, 60000)
-    val stats   = new Stats
-    val server  = new StatsdDaemon(stats, flusher, 8125, 60000)
+    val configFile    = Option(System.getenv.get("CONFIG"))
+
+    if (configFile == None) {
+      System.err.println("CONFIG=/path/to/config is required to start statsd.")
+      System.exit(1)
+    }
+
+    val config        = new Configuration(configFile.get)
+
+    val gangliaHost   = config("ganglia.host").or("127.0.0.1")
+    val gangliaPort   = config("ganglia.port").or(8649)
+    val flushInterval = config("flush_interval").or(60000)
+    val port          = config("port").or(8125)
+
+    Logging.configure { log =>
+      log.registerWithJMX = true
+
+      log.level = Level.toLevel(config("log.level").or("TRACE"))
+
+      log.file.enabled = true
+      log.file.filename = config("log.file").or("log/development.log")
+      log.file.maxSize = 10 * 1024
+      log.file.retainedFiles = 5
+    }
+
+    val server = new StatsdDaemon(gangliaHost, gangliaPort, port, flushInterval)
+
     server()
   }
 }

@@ -14,6 +14,7 @@ class StatsdProject(info: ProjectInfo) extends DefaultProject(info)
   val jerkson  = "com.codahale" %% "jerkson" % "0.1.5"
   val logula   = "com.codahale" %% "logula" % "2.1.1" withSources()
   val jmxetric = "com.specialprojectslab" % "jmxetric" % "0.0.5"
+  val fig      = "com.codahale" %% "fig" % "1.1.1" withSources()
 
   override def mainClass = Some("bitlove.statsd.StatsdDaemon")   
 
