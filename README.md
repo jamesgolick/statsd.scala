@@ -1,24 +1,24 @@
 statsd.scala
 ============
 
-statsd (https://github.com/etsy/statsd) without the node.js and flushing to ganglia instead of graphite (actually, flushing is pluggable).
+statsd (https://github.com/etsy/statsd) without the node.js and flushing to ganglia instead of graphite (actually, flushing is pluggable, but for now, ganglia's the only option).
 
 # How it works
 
-Depend on it:
+Download the assembly:
     
-    val jgRepo = "James Golick's Repo" at "http://repo.jamesgolick.com/"
-    val statsd  = "com.bitlove" %% "statsd" % "0.0.1"
+    wget https://github.com/jamesgolick/statsd.scala/downloads/whatever.jar
 
-Create an instance of bitlove.statsd.StatsdDaemon:
+Grab the example config file (JSON), and modify it to your liking:
     
-    val daemon = new bitlove.statsd.StatsdDaemon(gangliaHost   = "localhost",
-		  	       		         gangliaPort   = 8649,
-		  	       		         listenPort    = 8125,
-		  	       		         flushInterval = 60000) // ms
-..and start it:
+    wget https://github.com/jamesgolick/statsd.scala/raw/development/config/example.conf
+    vi example.conf
 
-    daemon()
+You'll want to make sure that ganglia.host and ganglia.port point to your gmond instance. The log settings in the example conf may or may not work for you.
+
+Once you have a config, start the daemon:
+
+    CONFIG=/path/to/statsd.conf java -jar statsd-assembly-0.0.1.jar
 
 Then push json messages to it over UDP.
 
