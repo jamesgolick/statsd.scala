@@ -3,6 +3,12 @@ statsd.scala
 
 statsd (https://github.com/etsy/statsd) without the node.js and flushing to ganglia instead of graphite (actually, flushing is pluggable, but for now, ganglia's the only option).
 
+# Why?
+
+If you have a service that requires you to run multiple processes on a single machine (ruby, python, php, node.js, etc), and you want to collect runtime metrics, you need some way to aggregate them on a per machine basis before pushing them in to a tool like ganglia. Statsd.scala is a metrics aggregator, loosely based on etsy's statsd (https://github.com/etsy/statsd).
+
+I wrote statsd.scala because I wanted my stats aggregator to run on the JVM and flush to ganglia.
+
 # How it works
 
 Download the assembly:
