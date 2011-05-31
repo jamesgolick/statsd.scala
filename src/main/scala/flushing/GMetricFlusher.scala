@@ -68,7 +68,7 @@ class GMetricFlusher(host: String, port: Int, flushInterval: Int) extends Flushe
     log.trace("Announcing %s-%s %s%s %s %s.", group, name, value, unit, gmetricType.getGangliaType, gmetricSlope)
 
     gm.announce(name, value, gmetricType,
-                  unit, gmetricSlope, flushInterval, flushInterval,
+                  unit, gmetricSlope, 120, 120,
                     group)
   }
 }
