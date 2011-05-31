@@ -62,7 +62,7 @@ object StatsdDaemon {
 
     val gangliaHost   = config("ganglia.host").or("127.0.0.1")
     val gangliaPort   = config("ganglia.port").or(8649)
-    val flushInterval = config("flush_interval").or(60000)
+    val flushInterval = config("flush_interval").or(15000)
     val port          = config("port").or(8125)
 
     Logging.configure { log =>
