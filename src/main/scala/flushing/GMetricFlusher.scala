@@ -3,7 +3,7 @@ package bitlove.statsd.flushing
 import com.codahale.logula.Logging
 
 import com.yammer.metrics.Counter
-import com.yammer.metrics.LoadMeter
+import com.yammer.metrics.Meter
 import com.yammer.metrics.Timer
 
 import ganglia.gmetric.GMetric
@@ -24,19 +24,22 @@ class GMetricFlusher(host: String, port: Int, flushInterval: Int) extends Flushe
 
   def flush(nameString: String, timer: Timer) = {
     val nameAndGroup = getNameAndGroup(nameString)
+    val percentiles  = timer.percentiles(0.5, 0.75, 0.95, 0.98, 0.99, 0.999).map(_.toString)
 
     announce(nameAndGroup, "count", timer.count.toString, GMetricType.UINT32, GMetricSlope.POSITIVE)
-    announce(nameAndGroup, "max", timer.max.convert(TimeUnit.MILLISECONDS).value.toString, GMetricType.FLOAT, GMetricSlope.BOTH, "ms")
-    announce(nameAndGroup, "min", timer.min.convert(TimeUnit.MILLISECONDS).value.toString, GMetricType.FLOAT, GMetricSlope.BOTH, "ms")
-    announce(nameAndGroup, "mean", timer.mean.convert(TimeUnit.MILLISECONDS).value.toString, GMetricType.FLOAT, GMetricSlope.BOTH, "ms")
-    announce(nameAndGroup, "median", timer.median.convert(TimeUnit.MILLISECONDS).value.toString, GMetricType.FLOAT, GMetricSlope.BOTH, "ms")
-    announce(nameAndGroup, "sd", timer.standardDeviation.convert(TimeUnit.MILLISECONDS).value.toString, GMetricType.FLOAT, GMetricSlope.BOTH, "ms")
-    announce(nameAndGroup, "95%", timer.p95.convert(TimeUnit.MILLISECONDS).value.toString, GMetricType.FLOAT, GMetricSlope.BOTH, "ms")
-    announce(nameAndGroup, "99%", timer.p99.convert(TimeUnit.MILLISECONDS).value.toString, GMetricType.FLOAT, GMetricSlope.BOTH, "ms")
-    announce(nameAndGroup, "99.9%", timer.p999.convert(TimeUnit.MILLISECONDS).value.toString, GMetricType.FLOAT, GMetricSlope.BOTH, "ms")
+    announce(nameAndGroup, "max", timer.max.toString, GMetricType.FLOAT, GMetricSlope.BOTH, "ms")
+    announce(nameAndGroup, "min", timer.min.toString, GMetricType.FLOAT, GMetricSlope.BOTH, "ms")
+    announce(nameAndGroup, "mean", timer.mean.toString, GMetricType.FLOAT, GMetricSlope.BOTH, "ms")
+    announce(nameAndGroup, "median", percentiles(0), GMetricType.FLOAT, GMetricSlope.BOTH, "ms")
+    announce(nameAndGroup, "sd", timer.stdDev.toString, GMetricType.FLOAT, GMetricSlope.BOTH, "ms")
+    announce(nameAndGroup, "75%", percentiles(1), GMetricType.FLOAT, GMetricSlope.BOTH, "ms")
+    announce(nameAndGroup, "95%", percentiles(2), GMetricType.FLOAT, GMetricSlope.BOTH, "ms")
+    announce(nameAndGroup, "98%", percentiles(3), GMetricType.FLOAT, GMetricSlope.BOTH, "ms")
+    announce(nameAndGroup, "99%", percentiles(4), GMetricType.FLOAT, GMetricSlope.BOTH, "ms")
+    announce(nameAndGroup, "99.9%", percentiles(5), GMetricType.FLOAT, GMetricSlope.BOTH, "ms")
   }
 
-  def flush(nameString: String, meter: LoadMeter) = {
+  def flush(nameString: String, meter: Meter) = {
     val nameAndGroup = getNameAndGroup(nameString)
 
     announce(nameAndGroup, "one", meter.oneMinuteRate.toString, GMetricType.UINT32, GMetricSlope.BOTH)
