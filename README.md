@@ -13,7 +13,7 @@ I wrote statsd.scala because I wanted my stats aggregator to run on the JVM and 
 
 Download the assembly:
     
-    wget https://github.com/downloads/jamesgolick/statsd.scala/statsd.scala-assembly-0.0.1.jar
+    wget https://github.com/downloads/jamesgolick/statsd.scala/statsd.scala-assembly-0.1.0.jar
 
 Grab the example config file (JSON), and modify it to your liking:
     
@@ -24,7 +24,7 @@ You'll want to make sure that ganglia.host and ganglia.port point to your gmond 
 
 Once you have a config, start the daemon:
 
-    CONFIG=/path/to/statsd.conf java -jar statsd.scala-assembly-0.0.1.jar
+    CONFIG=/path/to/statsd.conf java -jar statsd.scala-assembly-0.1.0.jar
 
 Then push json messages to it over UDP (there's also a rubygem. see below).
 
