@@ -28,6 +28,8 @@ Once you have a config, start the daemon:
 
 Then push json messages to it over UDP (there's also a rubygem. see below).
 
+    >> require "rubygems"
+    => true
     >> require "socket"
     => true
     >> require "json"
@@ -77,7 +79,7 @@ The API is pretty simple:
 
     ree-1.8.7-2011.03 :001 > require "rubygems"
       => true 
-    ree-1.8.7-2011.03 :002 > require "yajl
+    ree-1.8.7-2011.03 :002 > require "yajl"
      => true 
     ree-1.8.7-2011.03 :005 > require "statsd"
      => true 
